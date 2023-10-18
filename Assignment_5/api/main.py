@@ -76,3 +76,36 @@ def delete_one_sandwich(sandwich_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return sandwich.delete(db=db, sandwich_id=sandwich_id)
 #----------------------------------------------------------------------------------------------------------
+@app.post("/resources/", response_model=schemas.Sandwich, tags=["Resource"])
+def create_resources(resource: schemas.ResourceCreate, db: Session = Depends(get_db)):
+    return resource.create(db=db, resource=resource)
+
+
+@app.get("/resources/", response_model=list[schemas.Resource], tags=["Resource"])
+def read_resource(db: Session = Depends(get_db)):
+    return resources.read_all(db)
+
+
+@app.get("/resources/{resource_id}", response_model=schemas.Sandwich, tags=["Sandwiches"])
+def read_one_resource(resources_id: int, db: Session = Depends(get_db)):
+    resource = resources.read_one(db, resources_id=resources_id)
+    if resource is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return resource
+
+
+@app.put("/resources/{resources_id}", response_model=schemas.Sandwich, tags=["Resources"])
+def update_one_resource(resources_id: int, resource: schemas.ResourceUpdate, db: Session = Depends(get_db)):
+    resource_db = resources.read_one(db, resources_id=resources_id)
+    if resource_db is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return resource.update(db=db, resources=resources, resourceid=resources_id)
+
+
+@app.delete("/resources/{resource_id}", tags=["Resources"])
+def delete_one_resource(resources_id: int, db: Session = Depends(get_db)):
+    resource = resources.read_one(db, resources_id=resources_id)
+    if resource is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return resource.delete(db=db, resource_id=resources_id)
+#-------------------------------------------------------------------------------------------------
