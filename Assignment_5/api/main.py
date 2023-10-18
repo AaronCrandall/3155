@@ -109,3 +109,36 @@ def delete_one_resource(resources_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return resource.delete(db=db, resource_id=resources_id)
 #-------------------------------------------------------------------------------------------------
+@app.post("/recipes/", response_model=schemas.Recipe, tags=["Recipe"])
+def create_recipe(resource: schemas.RecipeCreate, db: Session = Depends(get_db)):
+    return recipes.create(db=db, recipes=recipes)
+
+
+@app.get("/recipes/", response_model=list[schemas.Recipe], tags=["Recipe"])
+def read_recipe(db: Session = Depends(get_db)):
+    return recipes.read_all(db)
+
+
+@app.get("/recipes/{recipes_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def read_one_recipe(recipes_id: int, db: Session = Depends(get_db)):
+    recipe = recipes.read_one(db, recipes_id=recipes_id)
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipe
+
+
+@app.put("/recipes/{recipes_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def update_one_recipe(recipes_id: int, recipe: schemas.RecipeUpdate, db: Session = Depends(get_db)):
+    recipe_db = recipes.read_one(db, recipes_id=recipes_id)
+    if recipe_db is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipe.update(db=db, recipe=recipe, recipes_id=recipes_id)
+
+
+@app.delete("/recipes/{recipe_id}", tags=["Recipe"])
+def delete_one_recipe(recipes_id: int, db: Session = Depends(get_db)):
+    recipe = recipes.read_one(db, recipes_id=recipes_id)
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipe.delete(db=db, recipes_id=recipes_id)
+#-------------------------------------------------------------------------------------------------
