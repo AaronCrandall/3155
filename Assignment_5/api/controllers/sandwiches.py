@@ -6,7 +6,7 @@ from ..models import models, schemas
 def create(db: Session, sandwich):
     # Create a new instance of the Order model with the provided data
     db_sandwich = models.Sandwich(
-        sandwich_name=sandwich.sandwich_name,
+        sandwich_name=sandwich.sandwich_name
     )
     # Add the newly created Order object to the database session
     db.add(db_sandwich)
