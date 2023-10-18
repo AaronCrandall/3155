@@ -142,3 +142,35 @@ def delete_one_recipe(recipes_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return recipe.delete(db=db, recipes_id=recipes_id)
 #-------------------------------------------------------------------------------------------------
+@app.post("/order_details/", response_model=schemas.OrderDetail, tags=["Order_Details"])
+def create_order_details(resource: schemas.OrderDetailCreate, db: Session = Depends(get_db)):
+    return order_details.create(db=db, order_details=order_details)
+
+
+@app.get("/order_details/", response_model=list[schemas.OrderDetail], tags=["Order_Details"])
+def read_order_details(db: Session = Depends(get_db)):
+    return order_details.read_all(db)
+
+
+@app.get("/order_details/{order_details_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def read_one_order_details(order_details_id: int, db: Session = Depends(get_db)):
+    order_detail = order_details.read_one(db, order_details_id=order_details_id)
+    if order_detail is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return order_detail
+
+
+@app.put("/order_details/{order_details_id}", response_model=schemas.OrderDetail, tags=["Order_Details"])
+def update_one_order_details(order_details_id: int, recipe: schemas.OrderDetailUpdate, db: Session = Depends(get_db)):
+    order_details_db = order_details.read_one(db, order_details_id=order_details_id)
+    if order_details_db is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return order_details.update(db=db, order_details=order_details, order_details_id=order_details_id)
+
+
+@app.delete("/order_details/{order_details_id}", tags=["Order Details"])
+def delete_one_order_details(order_details_id: int, db: Session = Depends(get_db)):
+    order_detail = order_details.read_one(db, order_details_id=order_details_id)
+    if order_detail is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return order_detail.delete(db=db, order_details_id=order_details_id)
